@@ -5,4 +5,4 @@ is to
 
     > make run
 
-in this repository to see how Bup compares to Git.
+in this repository to see how Bup compares to Git. See `RUN.md` for the output.
