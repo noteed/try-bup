@@ -36,6 +36,7 @@ cp -a /repo/.git /git-initial
 
 echo
 echo Differences between /git-initial and /bup-initial:
+echo
 indent diff -r -u /git-initial /bup-initial
 echo
 echo "Note that beside .bup being a bare repository, they are identical:"
@@ -56,7 +57,7 @@ cd /repo
 echo hello world > data
 git add data
 indent git commit -m Initial-commit
-git gc
+indent git gc
 cd /
 cp -a /repo/.git /git-hello-world
 echo
