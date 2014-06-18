@@ -110,3 +110,40 @@ export GIT_DIR=/git-hello-world
 indent git show $COMMIT_ID
 echo
 echo "We can see they're the same."
+
+echo
+echo "## New data"
+echo
+echo 'Here we see that using `bup split` again replaces the previous data.'
+echo
+
+bup tick # Ensure ls -t orders things as we want.
+echo Bup is nice | indent bup split -n master -vv
+PACK_IDX=$(ls -t /.bup/objects/pack/pack-*.idx | head -n 1)
+COMMIT_ID=$(git verify-pack -v \
+  $PACK_IDX \
+  | grep commit | cut -f 1 -d ' ')
+export GIT_DIR=/.bup
+indent git show $COMMIT_ID
+
+echo
+echo "## Chunks"
+
+bup tick # Ensure ls -t orders things as we want.
+echo
+echo 'We `bup split` some additional data...'
+echo
+dd if=/dev/urandom of=9k.data bs=1024 count=9 2> /dev/null
+cat 9k.data | indent bup split -n master -vv
+indent tree /.bup/objects/pack
+
+PACK_IDX=$(ls -t /.bup/objects/pack/pack-*.idx | head -n 1)
+
+indent git verify-pack -v \
+  $PACK_IDX
+
+COMMIT_ID=$(git verify-pack -v \
+  $PACK_IDX \
+  | grep commit | cut -f 1 -d ' ')
+export GIT_DIR=/.bup
+indent git show $COMMIT_ID
